@@ -22,10 +22,10 @@ router.route('/messages')
     .get(messageController.index)
     .post(messageController.new)
 
-router.route('./messages/getQueue')
+router.route('/messages/getQueue')
     .get(messageController.getQueue)
 
-router.route('./messages/getPreviousList')
+router.route('/messages/getPreviousList')
     .get(messageController.getPreviousList)
 
 router.route('/messages/:message_id')
