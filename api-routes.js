@@ -10,6 +10,13 @@ app.set('superSecret', process.env.SESSION_SECRET)
 // var authenticateController = require('./controllers/authenticate')
 var messageController = require('./controllers/message')
 
+router.get('/', function (req, res) {
+    res.json({
+        status: 'API Its Working',
+        message: 'Welcome to Employee Beacon!',
+    })
+})
+
 // Message routes
 router.route('/messages')
     .get(messageController.index)
@@ -20,7 +27,7 @@ router.route('./messages/getQueue')
 
 router.route('./messages/getPreviousList')
     .get(messageController.getPreviousList)
-    
+
 router.route('/messages/:message_id')
     .delete(messageController.deleteById)
 
