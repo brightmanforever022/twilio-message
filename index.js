@@ -5,6 +5,7 @@ let mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const Message = require('./models/messageModel');
 const Twilio = require('twilio')
+const http = require("http");
 
 // Initialize
 let app = express()
@@ -48,7 +49,10 @@ app.listen(port, function () {
     console.log("Running twilio-message on port " + port)
 })
 
-var messageTimer = setInterval(messageSender, 60000);
+var messageTimer = setInterval(messageSender, 60000)
+var pingdom = setInterval(function() {
+    http.get("https://twilio-message.herokuapp.com/")
+}, 300000)
 
 function messageSender() {
     Message.find({is_sent: false}, (err, messageList) => {

@@ -26,6 +26,7 @@
     "body-parser": "^1.18.3",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
+    "http": "0.0.0",
     "mongoose": "^5.4.21",
     "nodemon": "^1.18.10",
     "twilio": "^3.30.0"
