@@ -45,7 +45,7 @@ mongoose.connect(MONGODB_URI, (mongoErr, db) => {
 var port = process.env.PORT || 8080
 
 app.listen(port, function () {
-    console.log("Running beacon on port " + port)
+    console.log("Running twilio-message on port " + port)
 })
 
 var messageTimer = setInterval(messageSender, 60000);
@@ -65,7 +65,6 @@ function messageSender() {
                         } else {
                             var newMessage = messageItem
                             newMessage.is_sent = true
-                            console.log('new message: ', newMessage)
                             newMessage.save()
                         }
                     })
@@ -76,11 +75,8 @@ function messageSender() {
 }
 
 function sendMessage(message_content, message_to, callback) {
-    console.log('send message at here: ', message_to)
-    console.log('twilio client message: ', twilioClient.messages)
-
     twilioClient.messages.create({from: twilioNumber, body: message_content, to: message_to}).then(message => {
-        console.log('message sent: ', message)
+        console.log('message sent to : ', message_to)
         callback(null)
     }).catch(e => {
         console.log('there is a problem in sending message through twilio: ', e)
