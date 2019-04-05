@@ -13,7 +13,7 @@ var messageController = require('./controllers/message')
 router.get('/', function (req, res) {
     res.json({
         status: 'API Its Working',
-        message: 'Welcome to Employee Beacon!',
+        message: 'Welcome to Twilio Message!',
     })
 })
 
