@@ -1,10 +1,8 @@
-// message.js
-
 // import message model
 const Message = require('../models/messageModel.js')
 
 // import helpers
-const CommonHelper = require('../helpers/common')
+// const CommonHelper = require('../helpers/common')
 
 // Handle action to list messages
 exports.index = (req, res) => {
@@ -28,9 +26,9 @@ exports.index = (req, res) => {
 exports.new = (req, res) => {
     var message = new Message()
     message.message_name = req.body.message_name
-    message.message_uuid = req.body.message_uuid
-    message.message_major = req.body.message_major
-    message.message_minor = req.body.message_minor
+    message.message_content = req.body.message_content
+    message.message_to = req.body.message_to
+    message.message_datetime = req.body.message_datetime
 
     message.save((saveErr, messageData) => {
         if (saveErr) {
@@ -49,11 +47,11 @@ exports.new = (req, res) => {
     })
 }
 
-// Handle action to get a beacon by id
-exports.view = (req, res) => {
-    Beacon.findById(req.params.beacon_id, (err, beaconData) => {
+// Get message list in queue
+exports.getQueue = (req, res) => {
+    Message.find({is_sent: false}, (err, messageData) => {
         if (err) {
-            console.log('Error in getting beacond data: ', err)
+            console.log('Error in getting message data: ', err)
             res.json({
                 status: 'error',
                 message: err
@@ -61,18 +59,18 @@ exports.view = (req, res) => {
         } else {
             res.json({
                 status: 'success',
-                message: 'Beacond Data by id',
-                data: beaconData
+                message: 'Messages in queue',
+                data: messageData
             })
         }
     })
 }
 
-// Handle action to get a beacon by uid
-exports.getBeaconByUid = (req, res) => {
-    Beacon.findOne({beacon_uuid: req.params.beacon_uuid}, (err, beaconData) => {
+// Get previous messages
+exports.getPreviousList = (req, res) => {
+    Message.find({is_sent: true}, (err, messageData) => {
         if (err) {
-            console.log('Error in getting beacond data: ', err)
+            console.log('Error in getting message data: ', err)
             res.json({
                 status: 'error',
                 message: err
@@ -80,38 +78,63 @@ exports.getBeaconByUid = (req, res) => {
         } else {
             res.json({
                 status: 'success',
-                message: 'Beacond Data by uuid',
-                data: beaconData
+                message: 'Previous sent messages',
+                data: messageData
             })
         }
     })
 }
 
-// Handle action to remove beacon
-exports.delete = (req, res) => {
-    Beacon.findByIdAndRemove(req.params.beacon_id, (err, beaconData) => {
+// Handle action to remove message
+exports.deleteById = (req, res) => {
+    Message.findByIdAndRemove(req.params.message_id, (err, messageData) => {
         if (err) {
-            console.log('Error in deleting beacon data: ', err)
+            console.log('Error in deleting message data: ', err)
             res.json({
                 status: 'error',
                 message: err
             })
         } else (
-            CommonHelper.addHistory('beacon', beaconData._id, 'deleted', (historyErr, historyRes) => {
-                if (historyErr) {   // Deleted successfully, but there is a problem in adding history
-                    res.json({
-                        status: 'success, but not stored history into db',
-                        message: 'beacon data has been deleted successfully',
-                        data: beaconData
-                    })
-                } else {
-                    res.json({
-                        status: 'success',
-                        message: 'beacon data has been deleted successfully',
-                        data: beaconData
-                    })
-                }
+            res.json({
+                status: 'success',
+                message: 'message data has been deleted successfully',
+                data: messageData
             })
         )
     })
+}
+
+exports.deleteByName = (req, res) => {
+    Message.find({message_name: req.params.message_name}).remove().exec((err, data) => {
+        if (err) {
+            console.log('Error in deleting message data: ', err)
+            res.json({
+                status: 'error',
+                message: err
+            })
+        } else (
+            res.json({
+                status: 'success',
+                message: 'message data has been deleted successfully',
+                data: data
+            })
+        )
+    })
+    /*
+    Message.findByIdAndRemove(req.params.message_id, (err, messageData) => {
+        if (err) {
+            console.log('Error in deleting message data: ', err)
+            res.json({
+                status: 'error',
+                message: err
+            })
+        } else (
+            res.json({
+                status: 'success',
+                message: 'message data has been deleted successfully',
+                data: messageData
+            })
+        )
+    })
+    */
 }
