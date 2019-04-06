@@ -51,7 +51,7 @@ app.listen(port, function () {
 
 var messageTimer = setInterval(messageSender, 60000)
 var pingdom = setInterval(function() {
-    http.get("http://twilio-message.herokuapp.com/")
+    http.get("http://twilio-message.herokuapp.com/api/")
 }, 300000)
 
 function messageSender() {
