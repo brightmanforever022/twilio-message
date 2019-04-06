@@ -1,10 +1,7 @@
 // import message model
 const Message = require('../models/messageModel.js')
 
-// import helpers
-// const CommonHelper = require('../helpers/common')
-
-// Handle action to list messages
+// Handle action to get all messages
 exports.index = (req, res) => {
     Message.get((err, messages) => {
         if (err) {
@@ -22,7 +19,7 @@ exports.index = (req, res) => {
     })
 }
 
-// Handle action to create message
+// Handle action to create new message
 exports.new = (req, res) => {
     var message = new Message()
     message.message_name = req.body.message_name
@@ -47,7 +44,7 @@ exports.new = (req, res) => {
     })
 }
 
-// Get message list in queue
+// Handle action to get message list in current queue
 exports.getQueue = (req, res) => {
     Message.find({is_sent: false}, (err, messageData) => {
         if (err) {
@@ -66,7 +63,7 @@ exports.getQueue = (req, res) => {
     })
 }
 
-// Get previous messages
+// Handle action to get previous messages
 exports.getPreviousList = (req, res) => {
     Message.find({is_sent: true}, (err, messageData) => {
         if (err) {
@@ -85,7 +82,7 @@ exports.getPreviousList = (req, res) => {
     })
 }
 
-// Handle action to remove message
+// Handle action to remove message by id
 exports.deleteById = (req, res) => {
     Message.findByIdAndRemove(req.params.message_id, (err, messageData) => {
         if (err) {
@@ -104,6 +101,7 @@ exports.deleteById = (req, res) => {
     })
 }
 
+// Handle action to remove message by name
 exports.deleteByName = (req, res) => {
     Message.find({message_name: req.params.message_name}).remove().exec((err, data) => {
         if (err) {
@@ -120,21 +118,4 @@ exports.deleteByName = (req, res) => {
             })
         )
     })
-    /*
-    Message.findByIdAndRemove(req.params.message_id, (err, messageData) => {
-        if (err) {
-            console.log('Error in deleting message data: ', err)
-            res.json({
-                status: 'error',
-                message: err
-            })
-        } else (
-            res.json({
-                status: 'success',
-                message: 'message data has been deleted successfully',
-                data: messageData
-            })
-        )
-    })
-    */
 }
